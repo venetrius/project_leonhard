@@ -5,21 +5,35 @@ const isPalindrome = string => {
     return reverseString == string
 }
 
-const findBiggestPolindrome = (limit) => {
+let palindromes = []
+
+const generatePalindromes = () => {
     const start = 100;
     const last = 999
-    let max = 0
+    const store = {}
     for(let i = start; i <= last; i++) {
         for(let j = start; j <= last; j++) {
             const res = i * j
-            if (res < limit && isPalindrome(res.toString())) {
-                if(max < res) {
-                    max = res
-                }
+            if (isPalindrome(res.toString())) {
+                store[res] = res
             }
         }
     }
-    return max
+    palindromes = Object.values(store).sort((a,b) => a - b)
+}
+
+const findBiggestPolindrome = (limit) => {
+    if(!palindromes.length) {
+        generatePalindromes()
+    }
+
+    for( let i = 0; i < palindromes.length; i++) {
+        if(palindromes[i] > limit) {
+            console.log({limit, val: palindromes[i], i})
+            return(palindromes[i - 1])
+        }
+    }
+    return palindromes[palindromes.length - 1]
 }
 
 const testIsPolindrime = () => {
@@ -32,7 +46,11 @@ const testIsPolindrime = () => {
 }
  
 const testFindBiggestPolindrome = () => {
-    console.log(findBiggestPolindrome(1000000))
+    console.log(findBiggestPolindrome(101110))
+    console.log(findBiggestPolindrome(800000))
+
+    console.log(JSON.stringify(palindromes))
+    console.log(palindromes.length)
 }
 
 const test = () => {
